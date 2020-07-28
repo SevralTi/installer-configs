@@ -1,0 +1,131 @@
+{
+  "name": "Nexus 6P",
+  "codename": "angler",
+  "unlock": ["confirm_model"],
+  "user_actions": {
+    "recovery": {
+      "title": "Reboot to Recovery",
+      "description": "Press and hold the volume up and power buttons until the phone reboots.",
+      "image": "phone_power_down",
+      "button": true
+    },
+    "bootloader": {
+      "title": "Reboot to Bootloader",
+      "description": "Press and hold the volume down and power buttons until the phone reboots.",
+      "image": "phone_power_down",
+      "button": true
+    },
+    "confirm_model": {
+      "title": "Confirm your model",
+      "description": "Please double-check that your device is an LG Nexus 6P (hammerhead). The LG Nexus 6 (shamu) is not compatible."
+    }
+  },
+  "operating_systems": [
+    {
+      "name": "Ubuntu Touch",
+      "sanity_check": "Are you sure?",
+      "options": [
+        {
+          "var": "channel",
+          "name": "Channel",
+          "tooltip": "The release channel",
+          "link": "https://docs.ubports.com/en/latest/about/process/release-schedule.html",
+          "type": "select",
+          "remote_values": { "type": "systemimagechannels" }
+        },
+        {
+          "var": "wipe",
+          "name": "Wipe Userdata",
+          "tooltip": "Wipe personal data",
+          "type": "checkbox"
+        },
+        {
+          "var": "bootstrap",
+          "name": "Bootstrap",
+          "tooltip": "Flash system partitions using fastboot",
+          "type": "checkbox",
+          "value": true
+        },
+        {
+          "var": "format",
+          "name": "Format system partitions",
+          "tooltip": "Needed if the device is coming from specific versions of android. This will lead to data-loss.",
+          "type": "checkbox",
+          "value": false
+        }
+      ],
+      "prerequisites": [],
+      "steps": [
+        {
+          "type": "download",
+          "condition": {"var": "bootstrap", "value": true},
+          "group": "firmware",
+          "files": [
+            {
+              "url": "https://ci.ubports.com/job/Device%20Compatibility%20Images/job/halium-angler/3/artifact/halium-unlocked-recovery_angler.img",
+              "checksum": "d90f6091aae30f45583edee06658d38e69697a9961f18af4fe09096f3aadeb73"
+            }
+          ]
+        },
+        {
+          "type": "adb:reboot",
+          "condition": {"var": "bootstrap", "value": true},
+          "to_state": "bootloader",
+          "fallback_user_action": "bootloader"
+        },
+        {
+          "type": "fastboot:flash",
+          "condition": {"var": "bootstrap", "value": true},
+          "flash": [
+            {
+              "partition": "recovery",
+              "file": "halium-unlocked-revocery_angler.img",
+              "group": "firmware"
+            }
+          ]
+        },
+        {
+          "type": "fastboot:erase",
+          "condition": {"var": "bootstrap", "value": true},
+          "partition": "cache"
+        },
+        {
+          "type": "fastboot:boot",
+          "condition": {"var": "bootstrap", "value": true},
+          "file": "halium-unlocked-revocery_angler.img",
+          "fallback_user_action": "recovery",
+          "group": "firmware"
+        },
+        {
+          "type": "adb:reboot",
+          "condition": {"var": "bootstrap", "value": false},
+          "to_state": "recovery",
+          "fallback_user_action": "recovery"
+        },
+        {
+          "type": "adb:format",
+          "condition": {"var": "format", "value": true},
+          "partition": "system"
+        },
+        {
+          "type": "adb:format",
+          "condition": {"var": "format", "value": true},
+          "partition": "data"
+        },
+        {
+          "type": "adb:format",
+          "partition": "cache"
+        },
+        {
+          "type": "systemimage"
+        },
+        {
+          "type": "adb:reboot",
+          "to_state": "recovery",
+          "fallback_user_action": "recovery"
+        }
+      ],
+      "slideshow": []
+    }
+  ]
+}
