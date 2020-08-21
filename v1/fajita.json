@@ -1,7 +1,7 @@
 {
-  "name": "Oneplus 6T",
+  "name": "OnePlus 6T",
   "codename": "fajita",
-  "unlock": ["twrp"],
+  "unlock": ["confirm_model", "upgrade_android"],
   "user_actions": {
     "recovery": {
       "title": "Reboot to Recovery",
@@ -11,13 +11,13 @@
     },
     "bootloader": {
       "title": "Reboot to Bootloader",
-      "description": "With the device powered off, hold Volume Up + Volume Down + Power.",
+      "description": "With the device powered off, hold Volume UP + Volume Down + Power",
       "image": "phone_power_up_down",
       "button": true
     },
-    "twrp": {
-      "title": "Pre-installation",
-      "description": "Make sure you are installed OxygenOS 9 to slot "A" and "B"",
+    "upgrade_android": {
+      "title": "Install OxygenOS 9",
+      "description": "If the device is running Android, you need to downgrade OxygenOS 10 to 9, because OnePlus 6T using Halium 9!",
     }
   },
   "operating_systems": [
@@ -48,8 +48,8 @@
           "group": "firmware",
           "files": [
             {
-              "url": "http://cdimage.ubports.com/devices/halium-unlocked-recovery_oneplus3.img",
-              "checksum": "ca6359915a692523d7d12f6f0ca85e81d89328e7ad5bd46779e0af5c4b8c850b"
+              "url": "https://ci.ubports.com/job/Device%20Compatibility%20Images/job/halium-dora/9/artifact/halium-unlocked-recovery_dora.img",
+              "checksum": "069cf56a6b3251d31e253bf308a76f456400c21abfbc7e1850475fbed1f810cb"
             }
           ]
         },
@@ -64,22 +64,20 @@
           "condition": {"var": "bootstrap", "value": true},
           "flash": [
             {
-              "partition": "recovery",
-              "file": "halium-unlocked-recovery_oneplus3.img",
+              "partition": "boot",
+              "file": "halium-unlocked-recovery_dora.img",
               "group": "firmware"
             }
           ]
         },
         {
           "type": "fastboot:erase",
-          "condition": {"var": "bootstrap", "value": true},
-          "partition": "cache"
+          "condition": {"var": "wipe", "value": true},
+          "partition": "userdata"
         },
         {
-          "type": "fastboot:boot",
-          "condition": {"var": "bootstrap", "value": true},
-          "file": "halium-unlocked-recovery_oneplus3.img",
-          "fallback_user_action": "recovery",
+          "type": "fastboot:reboot",
+          "fallback_user_action": "boot",
           "group": "firmware"
         },
         {
@@ -95,3 +93,4 @@
     }
   ]
 }
+
