@@ -23,7 +23,7 @@
     },
     "downgrade_android": {
       "title": "Downgrade Android and OxygenOS",
-      "description": "If the device is running Android, you need install oxyegnos 9 to both slots",
+      "description": "If the device is running Android 10 and oxygenOS 10, you need install oxyegnOS 9 to both slots",
       "link": "https://github.com/ubports-oneplus6/documentation/blob/master/downgrade_android.md"
     }
   },
@@ -82,11 +82,6 @@
               "file": "halium-unlocked-recovery_dora.img",
               "group": "firmware"
             },
-            {
-              "partition": "recovery",
-              "file": "halium-unlocked-recovery_dora.img",
-              "group": "firmware"
-            }
           ]
         },
         {
