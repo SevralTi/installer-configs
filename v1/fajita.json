@@ -1,7 +1,7 @@
 {
   "name": "OnePlus 6T",
   "codename": "fajita",
-  "unlock": ["confirm_model", "upgrade_android"],
+  "unlock": ["downgrade_android"],
   "user_actions": {
     "recovery": {
       "title": "Reboot to Recovery",
@@ -11,13 +11,20 @@
     },
     "bootloader": {
       "title": "Reboot to Bootloader",
-      "description": "With the device powered off, hold Volume UP + Volume Down + Power",
+      "description": "With the device powered off, hold Volume Up + Volume Down + Power.",
       "image": "phone_power_up_down",
       "button": true
     },
-    "upgrade_android": {
-      "title": "Install OxygenOS 9",
-      "description": "If the device is running Android, you need to downgrade OxygenOS 10 to 9, because OnePlus 6T using Halium 9!",
+    "boot": {
+      "title": "Boot the device",
+      "description": "Power on the device.",
+      "image": "phone_power_up",
+      "button": true
+    },
+    "downgrade_android": {
+      "title": "Downgrade Android and OxygenOS",
+      "description": "If the device is running Android, you need install oxyegnos 9 to both slots",
+      "link": "https://github.com/ubports-oneplus6/documentation/blob/master/downgrade_android.md"
     }
   },
   "operating_systems": [
@@ -39,6 +46,13 @@
           "tooltip": "Wipe personal data",
           "type": "checkbox"
         },
+        {
+          "var": "bootstrap",
+          "name": "Bootstrap",
+          "tooltip": "Flash system partitions using fastboot",
+          "type": "checkbox",
+          "value": true
+        }
       ],
       "prerequisites": [],
       "steps": [
@@ -48,8 +62,8 @@
           "group": "firmware",
           "files": [
             {
-              "url": "https://ci.ubports.com/job/Device%20Compatibility%20Images/job/halium-dora/9/artifact/halium-unlocked-recovery_dora.img",
-              "checksum": "069cf56a6b3251d31e253bf308a76f456400c21abfbc7e1850475fbed1f810cb"
+              "url": "https://dl.twrp.me/fajita/twrp-3.4.0-1-fajita.img",
+              "checksum": "72858e942ef68173191fc019a5616cc683bed5a8d9af978a4f7bbec4478c5810"
             }
           ]
         },
@@ -65,6 +79,11 @@
           "flash": [
             {
               "partition": "boot",
+              "file": "halium-unlocked-recovery_dora.img",
+              "group": "firmware"
+            },
+            {
+              "partition": "recovery",
               "file": "halium-unlocked-recovery_dora.img",
               "group": "firmware"
             }
